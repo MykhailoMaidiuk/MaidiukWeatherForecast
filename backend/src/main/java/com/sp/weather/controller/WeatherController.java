@@ -57,7 +57,7 @@ public class WeatherController {
 
 
 
-    @GetMapping("/get-weather")
+  /*  @GetMapping("/get-weather")
     @Parameter(
             in = ParameterIn.QUERY,
             required = true,
@@ -71,5 +71,5 @@ public class WeatherController {
             String city
     ) {
         return this.service.getWeatherInfo(city);
-    }
+    }*/
 }
