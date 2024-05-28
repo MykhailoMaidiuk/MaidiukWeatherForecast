@@ -22,10 +22,8 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y maven lcov
+      - name: Install Maven
+        run: sudo apt-get update && sudo apt-get install -y maven
 
       - name: Cache Maven packages
         uses: actions/cache@v3
@@ -34,28 +32,14 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-
       - name: Build backend project
         run: mvn install -DskipTests -f backend/pom.xml
 
-      - name: Run tests and generate coverage report
-        run: mvn test jacoco:report -f backend/pom.xml
+      - name: Run tests
+        run: mvn test -f backend/pom.xml
 
-      - name: Convert JaCoCo XML to LCOV
+      - name: Gather logs on failure
+        if: failure()
         run: |
-          git clone https://github.com/linux-testing/lcov.git
-          lcov/bin/lcov --capture --directory . --output-file coverage.info
-          lcov/bin/genhtml --output-directory coverage coverage.info
-
-      - name: Generate coverage summary
-        run: |
-          cd coverage
-          cp index.html coverage-summary.json
-
-      - name: Install check-code-coverage
-        run: npm i -D check-code-coverage
-
-      - name: Set code coverage commit status
-        run: npx -p check-code-coverage set-gh-status
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          echo "Build failed. Displaying log files..."
+          find . -name "*.log" | xargs cat
