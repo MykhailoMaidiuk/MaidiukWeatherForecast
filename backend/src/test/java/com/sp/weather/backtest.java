@@ -18,7 +18,6 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.security.web.SecurityFilterChain;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sp.*;
 import java.util.List;
 import com.sp.weather.dtos.WeatherDTO;
 import com.sp.weather.entity.Users;
