@@ -17,7 +17,7 @@ import java.util.Arrays;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
-  @Autowired
+/*  @Autowired
   private AppProperties appProperties;
 
   @Bean
@@ -35,8 +35,7 @@ public class WebSecurityConfig {
                 auth.anyRequest().permitAll())
     ;
     return http.build();
-  }
-
+  }*/
 
   /**
    * This is CORS configuration Source bean, it will only use for the development environment to allow cross origins such as
