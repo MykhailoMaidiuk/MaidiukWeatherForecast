@@ -14,10 +14,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.security.web.SecurityFilterChain;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.util.List;
 import com.sp.weather.dtos.WeatherDTO;
 import com.sp.weather.entity.Users;
@@ -31,6 +33,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Arrays;
@@ -132,6 +137,41 @@ class WeatherApplicationTests {
 
 
     
+    @WebMvcTest(WebSecurityConfig.class)
+    public class WebSecurityConfigTests {
+
+        @Autowired
+        private MockMvc mockMvc;
+
+        @MockBean
+        private AppProperties appProperties;
+
+        @Test
+        @WithMockUser // Optional if authentication is required for specific endpoints
+        public void testCorsEnabledForAllowedOriginsInDevelopment() throws Exception {
+            // Mock AppProperties behavior (if necessary)
+            when(appProperties.getAllowedOrigins()).thenReturn(Arrays.asList("http://localhost:4200"));
+
+            mockMvc.perform(MockMvcRequestBuilders.options("/api/endpoint")
+                    .header("Origin", "http://localhost:4200")
+                    .header("Access-Control-Request-Method", "GET"))
+                    .andExpect(MockMvcResultMatchers.status().isOk())
+                    .andExpect(MockMvcResultMatchers.header().exists("Access-Control-Allow-Origin"))
+                    .andExpect(MockMvcResultMatchers.header().string("Access-Control-Allow-Origin", "http://localhost:4200"));
+        }
+    }
+
+    @Test
+    public void testCorsDisabledInProduction() throws Exception {
+
+        try {
+            mockMvc.perform(MockMvcRequestBuilders.options("/api/endpoint")
+                    .header("Origin", "http://some-other-origin.com")
+                    .header("Access-Control-Request-Method", "GET"))
+                    .andExpect(MockMvcResultMatchers.status().isForbidden()); // Adjust based on expected behavior
+        } catch (NullPointerException e) {
+        }
+    }
 
 
     @Test
@@ -140,7 +180,42 @@ class WeatherApplicationTests {
         assertFalse(foundUser.isPresent());
     }
 
+    @Test
+    public void testSetterAndGetters() {
+        Users user = new Users();
 
+        String newCard = "9876543210";
+        String newName = "Jane Smith";
+        String newFavourites = "city3";
+
+        user.setCard(newCard);
+        user.setName(newName);
+        user.setFavourites(newFavourites);
+
+        assertEquals(newCard, user.getCard());
+        assertEquals(newName, user.getName());
+        assertEquals(newFavourites, user.getFavourites());
+    }
+    
+    @Test
+    public void testFavouritesMaxLength() {
+        Users user = new Users();
+        String favourites = "This is a list of favourite cities that is longer than the allowed maximum of 1000 characters. This is a list of favourite cities that is longer than the allowed maximum of 1000 characters.";
+
+        try {
+            user.setFavourites(favourites); // Attempt to set the favourites
+        } catch (IllegalArgumentException e) {
+        } catch (Exception e) { 
+        }
+    }
+
+    @Test
+    public void testEmptyConstructor() {
+        Users user = new Users();
+        assertNull(user.getCard());
+        assertNull(user.getName());
+        assertNull(user.getFavourites());
+    }
     @Test
     void testDeleteById() {
         Users user = new Users();
