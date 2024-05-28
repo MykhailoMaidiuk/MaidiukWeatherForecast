@@ -9,9 +9,12 @@ import com.sp.weather.controller.*;
 import com.sp.weather.entity.*;
 import com.sp.weather.repository.*;
 import com.sp.weather.service.*;
+
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -30,7 +33,9 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -111,6 +116,20 @@ class WeatherApplicationTests {
         assertEquals(user, result);
     }
 
+    @Test
+    public void testWeatherInfoReturnsSingleWeatherDTOForGivenCity() {
+        String expectedCity = "Berlin";
+        String expectedTemperature = "35";
+
+        WeatherService weatherInfoService = new WeatherService(); // Assuming WeatherInfoService class exists
+        List<WeatherDTO> actualWeather = weatherInfoService.getWeatherInfo(expectedCity);
+
+        assertEquals(1, actualWeather.size(), "List should contain only one WeatherDTO"); // Assert list size
+        WeatherDTO actualWeatherDTO = actualWeather.get(0);
+
+        assertEquals(expectedCity, actualWeatherDTO.getLocationName(), "Location should match city for basic test"); // Consistent location
+        assertEquals(expectedTemperature, actualWeatherDTO.getTemperature(), "Temperature should match");
+    }
 
     // WeatherController Tests
     @Test
@@ -173,8 +192,11 @@ class WeatherApplicationTests {
         }
     }
 
+ 
 
-    @Test
+
+
+	@Test
     void testFindById_NotFound() {
         Optional<Users> foundUser = userRepository.findById("nonExistentCard");
         assertFalse(foundUser.isPresent());
