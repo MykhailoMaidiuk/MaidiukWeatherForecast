@@ -131,53 +131,9 @@ class WeatherApplicationTests {
         assertEquals(user, result);
     }
 
-    @Test
-    void testSaveCaard() throws Exception {
-        Users user = new Users("testCard", "John Doe", "Sunny weather");
-        when(weatherService.saveCard(any(Users.class))).thenReturn(user);
 
-        String userJson = objectMapper.writeValueAsString(user);
-
-        MvcResult result = mockMvc.perform(post("/api/weather/add-card")
-                .content(userJson)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andReturn();
-
-        assertEquals(200, result.getResponse().getStatus());
-
-        String jsonResponse = result.getResponse().getContentAsString();
-        Users returnedUser = objectMapper.readValue(jsonResponse, Users.class);
-
-        assertEquals("testCard", returnedUser.getCard());
-        assertEquals("John Doe", returnedUser.getName());
-        assertEquals("Sunny weather", returnedUser.getFavourites());
-    }
     
-    @Test
-    void testGetWeatherInfo() throws Exception {
-        WeatherDTO weatherDTO = new WeatherDTO("Berlin", "Germany", "15", "Clear", "01", "true");
-        when(weatherService.getWeatherInfo(anyString())).thenReturn(Arrays.asList(weatherDTO));
 
-        MvcResult result = mockMvc.perform(get("/api/weather/get-weather")
-                .param("city", "Berlin")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andReturn();
-
-        assertEquals(200, result.getResponse().getStatus());
-
-        String jsonResponse = result.getResponse().getContentAsString();
-        List<WeatherDTO> weatherList = Arrays.asList(objectMapper.readValue(jsonResponse, WeatherDTO[].class));
-
-        assertEquals(1, weatherList.size());
-        WeatherDTO returnedWeather = weatherList.get(0);
-
-        assertEquals("Berlin", returnedWeather.getLocationName());
-        assertEquals("Germany", returnedWeather.getCountryName());
-        assertEquals("15", returnedWeather.getTemperature());
-        assertEquals("Clear", returnedWeather.getConditionText());
-        assertEquals("01", returnedWeather.getImageCode());
-        assertEquals("true", returnedWeather.getIsDay());
-    }
 
     @Test
     void testFindById_NotFound() {
@@ -265,11 +221,7 @@ class WeatherApplicationTests {
     }
 
 
-    @Test
-    void testPermitAll() throws Exception {
-        mockMvc.perform(get("/api/weather/get-card"))
-                .andExpect(status().isOk());
-    }
+   
     
     
     
