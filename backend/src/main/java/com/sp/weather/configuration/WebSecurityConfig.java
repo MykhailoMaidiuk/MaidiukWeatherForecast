@@ -45,7 +45,7 @@ public class WebSecurityConfig {
    *
    * @return {@link CorsConfigurationSource}
    */
-  @Bean
+  /*@Bean
   CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
     if (appProperties.getAllowedOrigins() != null && !appProperties.getAllowedOrigins().isEmpty()) {
@@ -58,5 +58,5 @@ public class WebSecurityConfig {
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", configuration);
     return source;
-  }
+  }*/
 }
