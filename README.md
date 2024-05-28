@@ -1,6 +1,6 @@
 
 
 
-[![codecov](https://codecov.io/gh/username/repo/branch/main/graph/badge.svg)](https://codecov.io/gh/username/repo)
+[![codecov](https://codecov.io/gh/MykhailoMaidiuk/MaidiukWeatherForecast/branch/feature-branch-tests/graph/badge.svg)](https://codecov.io/gh/MykhailoMaidiuk/MaidiukWeatherForecast)
 
 
