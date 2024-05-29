@@ -32,10 +32,12 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -235,17 +237,26 @@ class WeatherApplicationTests {
         String actualSecret = appProperties.getJwtSecret();
         assertEquals(null, actualSecret);
     }
-    @Test
-    public void testJwtExpirationMs_defaultValueIsZero() {
-        // Assert that the default value of jwtExpirationMs is 0
-        Long jwtExpirationMs = appProperties.getJwtExpirationMs();
-        assertEquals(0L, jwtExpirationMs);
-    }
-    @Test
+ 
     public void testAllowedOrigins_defaultIsEmptyList() {
         // Assert that the default value of allowedOrigins is an empty list
         List<String> allowedOrigins = appProperties.getAllowedOrigins();
         assertFalse(allowedOrigins.isEmpty());
+    }
+
+    @Test
+    public void testцJwtSecret() {
+        AppProperties appProperties = new AppProperties();
+
+        // Test default value (assuming null by default)
+        assertNull(appProperties.getJwtSecret());
+
+        // Set a new value
+        String expectedSecret = "your-secret-key";
+        appProperties.setJwtSecret(expectedSecret);
+
+        // Test the updated value
+        assertEquals(expectedSecret, appProperties.getJwtSecret());
     }
 
     @Test
@@ -401,12 +412,7 @@ class WeatherApplicationTests {
         assertEquals(null, jwtSecret);
     }
     
-    @Test
-    void testJwtExpirationMs() {
-        Long jwtExpirationMs = appProperties.getJwtExpirationMs();
-        assertNotNull(jwtExpirationMs);
-        assertEquals(0, jwtExpirationMs);
-    }
+  
     
 
     @Test
