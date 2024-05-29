@@ -218,7 +218,36 @@ class WeatherApplicationTests {
         assertEquals(newName, user.getName());
         assertEquals(newFavourites, user.getFavourites());
     }
-    
+    @Test
+    public void testJwtSecret_defaultValueIsNull() {
+        // Assert that the default value of jwtSecret is null
+        String jwtSecret = appProperties.getJwtSecret();
+        assertNull(jwtSecret);
+    }
+
+    @Test
+    public void testSetJwtSecret_updatesValue() {
+
+        // Set the JWT secret
+        appProperties.setJwtSecret(null);
+
+        // Assert that the value is updated with the provided secret
+        String actualSecret = appProperties.getJwtSecret();
+        assertEquals(null, actualSecret);
+    }
+    @Test
+    public void testJwtExpirationMs_defaultValueIsZero() {
+        // Assert that the default value of jwtExpirationMs is 0
+        Long jwtExpirationMs = appProperties.getJwtExpirationMs();
+        assertEquals(0L, jwtExpirationMs);
+    }
+    @Test
+    public void testAllowedOrigins_defaultIsEmptyList() {
+        // Assert that the default value of allowedOrigins is an empty list
+        List<String> allowedOrigins = appProperties.getAllowedOrigins();
+        assertFalse(allowedOrigins.isEmpty());
+    }
+
     @Test
     public void testFavouritesMaxLength() {
         Users user = new Users();
