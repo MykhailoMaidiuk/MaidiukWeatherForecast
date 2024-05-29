@@ -30,4 +30,12 @@ public class AppProperties {
     public void setJwtSecret(String jwtSecret) {
         this.jwtSecret = jwtSecret;
     }
+
+    public Long getJwtExpirationMs() {
+        return jwtExpirationMs;
+    }
+
+    public void setJwtExpirationMs(Long jwtExpirationMs) {
+        this.jwtExpirationMs = jwtExpirationMs;
+    }
 }
